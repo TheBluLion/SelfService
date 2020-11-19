@@ -45,6 +45,9 @@ Needs instructions to import msapp
 
 ## Pin to users and Teams channels
 
+## Notes
+[Azure automation limits](https://docs.microsoft.com/en-us/azure/azure-resource-manager/management/azure-subscription-service-limits#automation-limits)
+
 # Contribute
 TODO: Explain how other users and developers can contribute to make your code better.
 
