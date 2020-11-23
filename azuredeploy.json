@@ -197,7 +197,6 @@
             "maxSizeInMegabytes": 1024,
             "requiresDuplicateDetection": false,
             "requiresSession": false,
-            "defaultMessageTimeToLive": "P10675199DT2H48M5.4775807S",
             "deadLetteringOnMessageExpiration": false,
             "duplicateDetectionHistoryTimeWindow": "PT10M",
             "maxDeliveryCount": 10,
