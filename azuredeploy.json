@@ -128,7 +128,7 @@
               "logVerbose": "false",
               "description": "Batch Upgrades lists of users to Teams Only using New-CSBatchPolicyAssignmentOperation",
               "publishContentLink": {
-                "uri": "[uri(variables('_artifactsLocation'), 'Scripts/BatchUpgradetoTeamsOnly.ps1')]",
+                "uri": "[uri(variables('_artifactsLocation'), 'Scripts/BatchUpgradeToTeamsOnly.ps1')]",
                 "version": "1.0.0.0"
               }
             }
@@ -201,7 +201,6 @@
             "deadLetteringOnMessageExpiration": false,
             "duplicateDetectionHistoryTimeWindow": "PT10M",
             "maxDeliveryCount": 10,
-            "autoDeleteOnIdle": "P10675199DT2H48M5.4775807S",
             "enablePartitioning": false,
             "enableExpress": false
           }
