@@ -524,12 +524,12 @@
                 "$connections": {
                     "value": {
                         "servicebus": {
-                            "id": "[concat(subscription().id, '/providers/Microsoft.Web/locations/', 'eastus', '/managedApis/', 'servicebus')]",
+                            "id": "[concat(subscription().id, '/providers/Microsoft.Web/locations/', '[resourceGroup().location]', '/managedApis/', 'servicebus')]",
                             "connectionId": "[resourceId('Microsoft.Web/connections', 'servicebus')]",
                             "connectionName": "[variables('serviceBusNamespaceName')]"
                         },
                         "azureautomation": {
-                            "id": "[concat(subscription().id, '/providers/Microsoft.Web/locations/', 'eastus', '/managedApis/', 'azureautomation')]",
+                            "id": "[concat(subscription().id, '/providers/Microsoft.Web/locations/', '[resourceGroup().location]', '/managedApis/', 'azureautomation')]",
                             "connectionId": "[resourceId('Microsoft.Web/connections', 'automationaccount')]",
                             "connectionName": "[variables('automationAccountName')]"
                         }
@@ -549,10 +549,10 @@
             "[resourceId('Microsoft.Web/connections', variables('automationAccountName'))]"
         ]
     }, {
-        "type": "MICROSOFT.WEB/CONNECTIONS",
+        "type": "Microsoft.Web/connections",
         "apiVersion": "2018-07-01-preview",
         "name": "[variables('serviceBusNamespaceName')]",
-        "location": "eastus",
+        "location": "[resourceGroup().location]",
         "properties": {
             "api": {
                 "id": "[concat(subscription().id, '/providers/Microsoft.Web/locations/', resourceGroup().location, '/managedApis/', 'servicebus')]"
@@ -566,7 +566,7 @@
         "type": "Microsoft.Web/connections",
         "apiVersion": "2018-07-01-preview",
         "name": "automationaccount",
-        "location": "eastus",
+        "location": "[resourceGroup().location]",
         "properties": {
             "api": {
                 "id": "[concat(subscription().id, '/providers/Microsoft.Web/locations/', resourceGroup().location, '/managedApis/', 'azureautomation')]"
