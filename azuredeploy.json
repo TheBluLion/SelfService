@@ -158,6 +158,19 @@
               "password": "[parameters('m365AdminPassword')]",
               "description": "Credentials with admin rights to grant Skype for Business and Teams policies."
             }
+          },
+          {
+            "type": "Microsoft.Automation/automationAccounts/connections",
+            "apiVersion": "2015-10-31",
+            "name": "[concat(variables('automationAccountName'), '/AzureRunAsConnection')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Automation/automationAccounts', variables('automationAccountName'))]"
+            ],
+            "properties": {
+                "connectionType": {
+                    "name": "AzureServicePrincipal"
+                }
+            }
           }
         ]
       },
@@ -238,7 +251,6 @@
           }
         }
       },
-
       {
         "type": "Microsoft.Web/connections",
         "name": "azureautomation",
@@ -254,14 +266,13 @@
             "id": "[concat('/subscriptions/',  subscription().subscriptionId, '/providers/Microsoft.Web/locations/', parameters('location') , '/managedApis/azureautomation')]"
           },
           "parameterValues": {
-            "token:TenantId": "",
-            "token:clientId": "",
-            "token:grantType": "",
-            "token:clientSecret": ""
+            "token:TenantId": "[listkeys(resourceId('Microsoft.Automation/automationAccounts/connections',variables('automationAccountName'),'AzureRunAsConnection'),'2016-06-01').ApplicationId]",
+            "token:clientId": "[listkeys(resourceId('Microsoft.Automation/automationAccounts/connections',variables('automationAccountName'),'AzureRunAsConnection'),'2016-06-01').ApplicationId]",
+            "token:grantType": "client_secret",
+            "token:clientSecret": "placeholder"
           }
         }
       },
-
       {
         "properties": {
             "state": "Enabled",
