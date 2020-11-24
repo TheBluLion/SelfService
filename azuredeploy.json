@@ -61,8 +61,7 @@
       "dataRetention": 7,
       "_artifactsLocation": "[parameters('samplePowerShellRunbookLocation')]",
       "defaultSASKeyName": "RootManageSharedAccessKey",
-      "authRuleResourceId": "[resourceId('Microsoft.ServiceBus/namespaces/authorizationRules', variables('serviceBusNamespaceName'), variables('defaultSASKeyName'))]",
-	    "sbVersion": "2017-04-01"
+      "authRuleResourceId": "[resourceId('Microsoft.ServiceBus/namespaces/authorizationRules', variables('serviceBusNamespaceName'), variables('defaultSASKeyName'))]"
     },
     "resources": [
       {
@@ -203,11 +202,23 @@
               "enablePartitioning": false,
               "enableExpress": false
             }
+          },
+          {
+            "apiVersion": "2017-04-01",
+            "name": "[variables('defaultSASKeyName')]",
+            "type": "authorizationRules",
+            "dependsOn": [
+              "[concat('Microsoft.ServiceBus/namespaces/', variables('serviceBusNamespaceName'))]"
+            ],
+            "location": "[parameters('location')]",
+            "properties": {
+              "rights": [
+                "Manage"
+              ]
+            }
           }
         ]
       },
-
-
       {
         "type": "Microsoft.Web/connections",
         "name": "servicebus",
