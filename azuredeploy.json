@@ -206,6 +206,51 @@
           }
         ]
       },
+
+
+      {
+        "type": "Microsoft.Web/connections",
+        "name": "servicebus",
+        "apiVersion": "2016-06-01",
+        "location": "[parameters('location')]",
+        "dependsOn": [
+          "[resourceId('Microsoft.ServiceBus/namespaces/AuthorizationRules', variables('serviceBusNamespaceName'), 'RootManageSharedAccessKey')]"
+        ],
+        "properties": {
+          "displayName": "Router",
+          "customParameterValues": {},
+          "api": {
+            "id": "[concat('/subscriptions/',  subscription().subscriptionId, '/providers/Microsoft.Web/locations/', parameters('location') , '/managedApis/servicebus')]"
+          },
+          "parameterValues": {
+            "connectionString": "[listKeys(resourceId('Microsoft.ServiceBus/namespaces/authorizationRules', variables('serviceBusNamespaceName'), 'RootManageSharedAccessKey'), '2015-08-01').primaryConnectionString]"
+          }
+        }
+      },
+
+      {
+        "type": "Microsoft.Web/connections",
+        "name": "azureautomation",
+        "apiVersion": "2016-06-01",
+        "location": "[parameters('location')]",
+        "dependsOn": [
+          "[resourceId('Microsoft.Automation/automationAccounts', variables('automationAccountName'))]"
+        ],
+        "properties": {
+          "displayName": "Automation Account",
+          "customParameterValues": {},
+          "api": {
+            "id": "[concat('/subscriptions/',  subscription().subscriptionId, '/providers/Microsoft.Web/locations/', parameters('location') , '/managedApis/azureautomation')]"
+          },
+          "parameterValues": {
+            "token:TenantId": "",
+            "token:clientId": "",
+            "token:grantType": "",
+            "token:clientSecret": ""
+          }
+        }
+      },
+
       {
         "properties": {
             "state": "Enabled",
