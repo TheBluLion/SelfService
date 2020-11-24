@@ -534,7 +534,7 @@
             },
             "displayName": "[variables('serviceBusNamespaceName')]",
             "parameterValues": {
-                "connectionString": "[listKeys(resourceId('Microsoft.ServiceBus/namespaces/authorizationRules', variables('serviceBusNamespaceName'), 'RootManageSharedAccessKey'), '2017-04-01').primaryConnectionString]"
+                "connectionString": "[listKeys(variables('authRuleResourceId'), '2017-04-01').primaryConnectionString]"
             }
         }
     }, {
