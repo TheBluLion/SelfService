@@ -57,7 +57,7 @@
       "workspaceName": "[concat(parameters('baseResourceName'),'WS')]",
       "automationAccountName": "[concat(parameters('baseResourceName'),'Acct')]",
       "serviceBusNamespaceName": "[concat(parameters('baseResourceName'),'SB')]",
-      "serviceBusQueueName": "[concat(parameters('baseResourceName'),'Batch')]",
+      "serviceBusQueueName": "batch",
       "dataRetention": 7,
       "_artifactsLocation": "[parameters('samplePowerShellRunbookLocation')]",
       "defaultSASKeyName": "RootManageSharedAccessKey",
@@ -175,36 +175,36 @@
           "resourceId": "[resourceId('Microsoft.Automation/automationAccounts', variables('automationAccountName'))]"
         }
       },
-{
-      "apiVersion": "2017-04-01",
-      "name": "[variables('serviceBusNamespaceName')]",
-      "type": "Microsoft.ServiceBus/Namespaces",
-      "location": "[parameters('location')]",
-      "sku": {
-        "name": "Basic"
-      },
-      "properties": {},
-      "resources": [
-        {
-          "apiVersion": "2017-04-01",
-          "name": "[variables('serviceBusQueueName')]",
-          "type": "Queues",
-          "dependsOn": [
-            "[concat('Microsoft.ServiceBus/namespaces/', variables('serviceBusNamespaceName'))]"
-          ],
-          "properties": {
-            "lockDuration": "PT5M",
-            "maxSizeInMegabytes": 1024,
-            "requiresDuplicateDetection": false,
-            "requiresSession": false,
-            "deadLetteringOnMessageExpiration": false,
-            "duplicateDetectionHistoryTimeWindow": "PT10M",
-            "maxDeliveryCount": 10,
-            "enablePartitioning": false,
-            "enableExpress": false
+      {
+        "apiVersion": "2017-04-01",
+        "name": "[variables('serviceBusNamespaceName')]",
+        "type": "Microsoft.ServiceBus/Namespaces",
+        "location": "[parameters('location')]",
+        "sku": {
+          "name": "Basic"
+        },
+        "properties": {},
+        "resources": [
+          {
+            "apiVersion": "2017-04-01",
+            "name": "[variables('serviceBusQueueName')]",
+            "type": "Queues",
+            "dependsOn": [
+              "[concat('Microsoft.ServiceBus/namespaces/', variables('serviceBusNamespaceName'))]"
+            ],
+            "properties": {
+              "lockDuration": "PT5M",
+              "maxSizeInMegabytes": 1024,
+              "requiresDuplicateDetection": false,
+              "requiresSession": false,
+              "deadLetteringOnMessageExpiration": false,
+              "duplicateDetectionHistoryTimeWindow": "PT10M",
+              "maxDeliveryCount": 10,
+              "enablePartitioning": false,
+              "enableExpress": false
+            }
           }
-        }
-      ]
-    }
+        ]
+      }
     ]
   }
