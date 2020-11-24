@@ -214,7 +214,7 @@
         "apiVersion": "2016-06-01",
         "location": "[parameters('location')]",
         "dependsOn": [
-          "[resourceId('Microsoft.ServiceBus/namespaces/AuthorizationRules', variables('serviceBusNamespaceName'), 'RootManageSharedAccessKey')]"
+          "[variables('authRuleResourceId')]"
         ],
         "properties": {
           "displayName": "Router",
@@ -223,7 +223,7 @@
             "id": "[concat('/subscriptions/',  subscription().subscriptionId, '/providers/Microsoft.Web/locations/', parameters('location') , '/managedApis/servicebus')]"
           },
           "parameterValues": {
-            "connectionString": "[listKeys(resourceId('Microsoft.ServiceBus/namespaces/authorizationRules', variables('serviceBusNamespaceName'), 'RootManageSharedAccessKey'), '2015-08-01').primaryConnectionString]"
+            "connectionString": "[listKeys(variables('authRuleResourceId'), '2015-08-01').primaryConnectionString]"
           }
         }
       },
@@ -534,7 +534,7 @@
             },
             "displayName": "[variables('serviceBusNamespaceName')]",
             "parameterValues": {
-                "connectionString": "[listKeys(resourceId('Microsoft.ServiceBus/namespaces/AuthorizationRules',variables('serviceBusNamespaceName'),'RootManageSharedAccessKey'),'2015-08-01').primaryConnectionString]"
+                "connectionString": "[listKeys(resourceId('Microsoft.ServiceBus/namespaces/authorizationRules', variables('serviceBusNamespaceName'), 'RootManageSharedAccessKey'), '2017-04-01').primaryConnectionString]"
             }
         }
     }, {
