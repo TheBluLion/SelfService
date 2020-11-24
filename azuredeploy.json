@@ -39,7 +39,7 @@
       },
 
       "m365AdminPassword": {
-        "type": "string",
+        "type": "securestring",
         "defaultValue": "",
         "metadata": {
           "description": "M365 admin password"
