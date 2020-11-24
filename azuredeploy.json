@@ -545,8 +545,8 @@
         },
         "apiVersion": "2016-06-01",
         "dependsOn": [
-            "[resourceId('Microsoft.Web/connections', variables('serviceBusNamespaceName'))]",
-            "[resourceId('Microsoft.Web/connections', variables('automationAccountName'))]"
+            "[resourceId('Microsoft.Web/connections', 'servicebus')]",
+            "[resourceId('Microsoft.Web/connections', 'automationaccount')]"
         ]
     }, {
         "type": "Microsoft.Web/connections",
