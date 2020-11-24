@@ -167,9 +167,10 @@
                 "[resourceId('Microsoft.Automation/automationAccounts', variables('automationAccountName'))]"
             ],
             "properties": {
-                "connectionType": {
-                    "name": "AzureServicePrincipal"
-                }
+              "isGlobal": false,
+              "connectionType": {
+                "name": "AzureServicePrincipal"
+              }
             }
           }
         ]
@@ -226,7 +227,9 @@
             "location": "[parameters('location')]",
             "properties": {
               "rights": [
-                "Manage"
+                    "Listen",
+                    "Manage",
+                    "Send"
               ]
             }
           }
