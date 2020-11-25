@@ -159,21 +159,6 @@
               "description": "Credentials with admin rights to grant Skype for Business and Teams policies."
             }
           }
-          /*
-          {
-            "type": "Microsoft.Automation/automationAccounts/connections",
-            "apiVersion": "2015-10-31",
-            "name": "[concat(variables('automationAccountName'), '/AzureRunAsConnection')]",
-            "dependsOn": [
-                "[resourceId('Microsoft.Automation/automationAccounts', variables('automationAccountName'))]"
-            ],
-            "properties": {
-              "isGlobal": false,
-              "connectionType": {
-                "name": "AzureServicePrincipal"
-              }
-            }
-          }*/
         ]
       },
       {
