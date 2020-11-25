@@ -82,7 +82,7 @@
       },
       {
         "type": "Microsoft.Automation/automationAccounts",
-        "apiVersion": "2018-03-01-preview",
+        "apiVersion": "2020-01-13-preview",
         "name": "[variables('automationAccountName')]",
         "location": "[parameters('location')]",
         "dependsOn": [
@@ -255,10 +255,7 @@
             "id": "[concat('/subscriptions/',  subscription().subscriptionId, '/providers/Microsoft.Web/locations/', parameters('location') , '/managedApis/azureautomation')]"
           },
           "parameterValues": {
-            "token:TenantId": "placeholder",
-            "token:clientId": "placeholder",
-            "token:grantType": "client_credentials",
-            "token:clientSecret": "placeholder"
+            "token:grantType": "client_credentials"
           }
         }
       },
@@ -510,14 +507,14 @@
                 "$connections": {
                     "value": {
                         "servicebus": {
-                            "id": "[concat(subscription().id, '/providers/Microsoft.Web/locations/', '[resourceGroup().location]', '/managedApis/', 'servicebus')]",
+                            "id": "[concat(subscription().id, '/providers/Microsoft.Web/locations/', parameters('location'), '/managedApis/', 'servicebus')]",
                             "connectionId": "[resourceId('Microsoft.Web/connections', 'servicebus')]",
-                            "connectionName": "[variables('serviceBusNamespaceName')]"
+                            "connectionName": "servicebus"
                         },
                         "azureautomation": {
-                            "id": "[concat(subscription().id, '/providers/Microsoft.Web/locations/', '[resourceGroup().location]', '/managedApis/', 'azureautomation')]",
+                            "id": "[concat(subscription().id, '/providers/Microsoft.Web/locations/', parameters('location'), '/managedApis/', 'azureautomation')]",
                             "connectionId": "[resourceId('Microsoft.Web/connections', 'automationaccount')]",
-                            "connectionName": "[variables('automationAccountName')]"
+                            "connectionName": "azureautomation"
                         }
                     }
                 }
