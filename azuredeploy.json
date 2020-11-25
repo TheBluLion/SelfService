@@ -54,7 +54,8 @@
         }
     },
     "variables": {
-      "workspaceName": "[concat(parameters('baseResourceName'),'WS')]",
+      //workspacename includes a unique string to minimize duplicate name errors.
+      "workspaceName": "[concat(parameters('baseResourceName'),uniqueString(parameters('baseResourceName')))]",
       "automationAccountName": "[concat(parameters('baseResourceName'),'Acct')]",
       "serviceBusNamespaceName": "[concat(parameters('baseResourceName'),'SB')]",
       "serviceBusQueueName": "batch",
@@ -82,7 +83,7 @@
       },
       {
         "type": "Microsoft.Automation/automationAccounts",
-        "apiVersion": "2020-01-13-preview",
+        "apiVersion": "2019-06-01",
         "name": "[variables('automationAccountName')]",
         "location": "[parameters('location')]",
         "dependsOn": [
@@ -243,7 +244,7 @@
       {
         "type": "Microsoft.Web/connections",
         "name": "automationaccount",
-        "apiVersion": "2016-06-01",
+        "apiVersion": "2018-07-01-preview",
         "location": "[parameters('location')]",
         "dependsOn": [
           "[resourceId('Microsoft.Automation/automationAccounts', variables('automationAccountName'))]"
@@ -255,7 +256,10 @@
             "id": "[concat('/subscriptions/',  subscription().subscriptionId, '/providers/Microsoft.Web/locations/', parameters('location') , '/managedApis/azureautomation')]"
           },
           "parameterValues": {
-            "token:grantType": "client_credentials"
+            "token:TenantId": "[subscription().tenantId]",
+            "token:clientId": "placeholder",
+            "token:grantType": "client_credentials",
+            "token:clientSecret": "placeholder"
           }
         }
       },
@@ -507,14 +511,14 @@
                 "$connections": {
                     "value": {
                         "servicebus": {
-                            "id": "[concat(subscription().id, '/providers/Microsoft.Web/locations/', parameters('location'), '/managedApis/', 'servicebus')]",
+                            "id": "[concat(subscription().id, '/providers/Microsoft.Web/locations/',parameters('location'), '/managedApis/', 'servicebus')]",
                             "connectionId": "[resourceId('Microsoft.Web/connections', 'servicebus')]",
-                            "connectionName": "servicebus"
+                            "connectionName": "[variables('serviceBusNamespaceName')]"
                         },
                         "azureautomation": {
                             "id": "[concat(subscription().id, '/providers/Microsoft.Web/locations/', parameters('location'), '/managedApis/', 'azureautomation')]",
                             "connectionId": "[resourceId('Microsoft.Web/connections', 'automationaccount')]",
-                            "connectionName": "azureautomation"
+                            "connectionName": "[variables('automationAccountName')]"
                         }
                     }
                 }
