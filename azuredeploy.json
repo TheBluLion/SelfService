@@ -158,8 +158,8 @@
               "password": "[parameters('m365AdminPassword')]",
               "description": "Credentials with admin rights to grant Skype for Business and Teams policies."
             }
-          },
-/*          Commented out creating RunAs account with client secret doesn't work yet
+          }
+          /*
           {
             "type": "Microsoft.Automation/automationAccounts/connections",
             "apiVersion": "2015-10-31",
@@ -173,10 +173,9 @@
                 "name": "AzureServicePrincipal"
               }
             }
-          }
+          }*/
         ]
       },
-*/
       {
         "type": "Microsoft.OperationalInsights/workspaces/linkedServices",
         "apiVersion": "2020-08-01",
