@@ -255,8 +255,8 @@
             "id": "[concat('/subscriptions/',  subscription().subscriptionId, '/providers/Microsoft.Web/locations/', parameters('location') , '/managedApis/azureautomation')]"
           },
           "parameterValues": {
-            "token:TenantId": "[listkeys(resourceId('Microsoft.Automation/automationAccounts/connections',variables('automationAccountName'),'AzureRunAsConnection'),'2016-06-01').ApplicationId]",
-            "token:clientId": "[listkeys(resourceId('Microsoft.Automation/automationAccounts/connections',variables('automationAccountName'),'AzureRunAsConnection'),'2016-06-01').ApplicationId]",
+            "token:TenantId": "[listkeys(resourceId('Microsoft.Automation/automationAccounts/connections',variables('automationAccountName'),'AzureRunAsConnection'),'2015-10-31').TenantId]",
+            "token:clientId": "[listkeys(resourceId('Microsoft.Automation/automationAccounts/connections',variables('automationAccountName'),'AzureRunAsConnection'),'2015-10-31').ApplicationId]",
             "token:grantType": "client_secret",
             "token:clientSecret": "placeholder"
           }
