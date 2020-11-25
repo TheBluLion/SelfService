@@ -159,6 +159,7 @@
               "description": "Credentials with admin rights to grant Skype for Business and Teams policies."
             }
           },
+/*          Commented out creating RunAs account with client secret doesn't work yet
           {
             "type": "Microsoft.Automation/automationAccounts/connections",
             "apiVersion": "2015-10-31",
@@ -175,6 +176,7 @@
           }
         ]
       },
+*/
       {
         "type": "Microsoft.OperationalInsights/workspaces/linkedServices",
         "apiVersion": "2020-08-01",
@@ -244,7 +246,7 @@
           "[variables('authRuleResourceId')]"
         ],
         "properties": {
-          "displayName": "Router",
+          "displayName": "[variables('serviceBusNamespaceName')]",
           "customParameterValues": {},
           "api": {
             "id": "[concat('/subscriptions/',  subscription().subscriptionId, '/providers/Microsoft.Web/locations/', parameters('location') , '/managedApis/servicebus')]"
@@ -550,7 +552,7 @@
         ]
     }, {
         "type": "Microsoft.Web/connections",
-        "apiVersion": "2018-07-01-preview",
+        "apiVersion": "2016-06-01",
         "name": "[variables('serviceBusNamespaceName')]",
         "location": "[resourceGroup().location]",
         "properties": {
@@ -564,7 +566,7 @@
         }
     }, {
         "type": "Microsoft.Web/connections",
-        "apiVersion": "2018-07-01-preview",
+        "apiVersion": "2016-06-01",
         "name": "automationaccount",
         "location": "[resourceGroup().location]",
         "properties": {
