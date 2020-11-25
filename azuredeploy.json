@@ -230,7 +230,7 @@
           "[variables('authRuleResourceId')]"
         ],
         "properties": {
-          "displayName": "[variables('serviceBusNamespaceName')]",
+          "displayName": "servicebus",
           "customParameterValues": {},
           "api": {
             "id": "[concat('/subscriptions/',  subscription().subscriptionId, '/providers/Microsoft.Web/locations/', parameters('location') , '/managedApis/servicebus')]"
@@ -242,14 +242,14 @@
       },
       {
         "type": "Microsoft.Web/connections",
-        "name": "azureautomation",
+        "name": "automationaccount",
         "apiVersion": "2016-06-01",
         "location": "[parameters('location')]",
         "dependsOn": [
           "[resourceId('Microsoft.Automation/automationAccounts', variables('automationAccountName'))]"
         ],
         "properties": {
-          "displayName": "Automation Account",
+          "displayName": "automationaccount",
           "customParameterValues": {},
           "api": {
             "id": "[concat('/subscriptions/',  subscription().subscriptionId, '/providers/Microsoft.Web/locations/', parameters('location') , '/managedApis/azureautomation')]"
@@ -537,13 +537,13 @@
     }, {
         "type": "Microsoft.Web/connections",
         "apiVersion": "2016-06-01",
-        "name": "[variables('serviceBusNamespaceName')]",
+        "name": "servicebus",
         "location": "[resourceGroup().location]",
         "properties": {
             "api": {
                 "id": "[concat(subscription().id, '/providers/Microsoft.Web/locations/', resourceGroup().location, '/managedApis/', 'servicebus')]"
             },
-            "displayName": "[variables('serviceBusNamespaceName')]",
+            "displayName": "servicebus",
             "parameterValues": {
                 "connectionString": "[listKeys(variables('authRuleResourceId'), '2017-04-01').primaryConnectionString]"
             }
