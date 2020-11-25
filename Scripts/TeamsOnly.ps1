@@ -1,19 +1,18 @@
 param(
-    [string]$webhookdata
+    [string]$upn,
+    [string]$policy
 )
 
 #this flags sets debug messages to show in the test pane
 $debug=$false
 
-    #the http request body should include any parameters passed to the runbook in json format
-    #best practice - a validation secret should also be included in the body to secure the request.
-    $webhookpayload = convertfrom-json $webhookdata
-    $upn=$webhookpayload.upn
-    $MigrateMeetings=$true
-    $Policy= $webhookpayload.upgradepolicy
+#other standard settings for this policy set can get defined here.
+$MigrateMeetings=$true
+
 
     if($debug){
-        write-output "debug: webhook payload is $($webhookpayload.upn)"
+        write-output "debug: upn is $($upn)"
+        write-output "debug: policy is $policy"
     }
 
 
@@ -45,7 +44,7 @@ $debug=$false
     #New-CsBatchPolicyAssignmentOperation -PolicyType TeamsUpgradePolicy -PolicyName $null -Identity $upn -OperationName "Batch assign null"
 
     #singleton for single runs - this uses Sfb session. Uncomment the line below to enable.
-    grant-csteamsupgradepolicy -PolicyName $Policy -MigrateMeetingsToTeams $MigrateMeetings -Identity $upn
+    grant-csteamsupgradepolicy -PolicyName $policy -MigrateMeetingsToTeams $MigrateMeetings -Identity $upn
 
     #clean up session
     remove-pssession $sfbSession
