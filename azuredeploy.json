@@ -257,7 +257,7 @@
           },
           "parameterValues": {
             "token:TenantId": "[subscription().tenantId]",
-            "token:clientId": "placeholder",
+            "token:clientId": "7ab7862c-4c57-491e-8a45-d52a7e023983",
             "token:grantType": "client_credentials",
             "token:clientSecret": "placeholder"
           }
@@ -338,7 +338,7 @@
                                     }
                                 }
                             },
-                            "path": "/subscriptions/@{encodeURIComponent('8f7638bf-2822-4e00-95a5-c90301dde80f')}/resourceGroups/@{encodeURIComponent('Selfservice01')}/providers/Microsoft.Automation/automationAccounts/@{encodeURIComponent('SelfServiceTest01Acct')}/jobs",
+                            "path": "[concat('/subscriptions/@{encodeURIComponent(''', subscription().subscriptionId,''')}/resourceGroups/@{encodeURIComponent(''',resourceGroup().name,''')}/providers/Microsoft.Automation/automationAccounts/@{encodeURIComponent(''',variables('automationAccountName'),''')}/jobs')]",
                             "queries": {
                                 "x-ms-api-version": "2015-10-31",
                                 "runbookName": "BatchUpgradeToTeamsOnly",
@@ -416,7 +416,7 @@
                                 }
                             },
                             "method": "get",
-                            "path": "/subscriptions/@{encodeURIComponent('8f7638bf-2822-4e00-95a5-c90301dde80f')}/resourceGroups/@{encodeURIComponent('Selfservice01')}/providers/Microsoft.Automation/automationAccounts/@{encodeURIComponent('SelfServiceTest01Acct')}/jobs/@{encodeURIComponent(body('Create_job')?['properties']?['jobId'])}/output",
+                            "path": "[concat('/subscriptions/@{encodeURIComponent(''', subscription().id,''')}/resourceGroups/@{encodeURIComponent(''',resourceGroup().name,''')}/providers/Microsoft.Automation/automationAccounts/@{encodeURIComponent(''',variables('automationAccountName'),''')}/jobs/@{encodeURIComponent(body(''Create_job'')?[''properties'']?[''jobId''])}/output')]",
                             "queries": {
                                 "x-ms-api-version": "2015-10-31"
                             }
