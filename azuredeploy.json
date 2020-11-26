@@ -508,6 +508,20 @@
                 }
             },
             "parameters": {
+                "$connections": {
+                    "value": {
+                        "servicebus": {
+                            "id": "[concat(subscription().id, '/providers/Microsoft.Web/locations/',parameters('location'), '/managedApis/', 'servicebus')]",
+                            "connectionId": "[resourceId('Microsoft.Web/connections', 'servicebus')]",
+                            "connectionName": "servicebus"
+                        },
+                        "azureautomation": {
+                            "id": "[concat(subscription().id, '/providers/Microsoft.Web/locations/', parameters('location'), '/managedApis/', 'azureautomation')]",
+                            "connectionId": "[resourceId('Microsoft.Web/connections', 'automationaccount')]",
+                            "connectionName": "automationaccount"
+                        }
+                    }
+                }
             }
         },
         "name": "BatchProcessingSchedule",
