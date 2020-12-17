@@ -29,6 +29,7 @@ TODO: Guide users through getting your code up and running on their own system. 
 
 ## Import the Flow
 Needs instructions to install flow package
+https://gov.flow.microsoft.us
 1. SelfServiceFlow.zip
 
 ## Import the PowerApp
