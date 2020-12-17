@@ -264,6 +264,337 @@
         }
       },
       {
+        "type": "Microsoft.Logic/workflows",
+        "apiVersion": "2017-07-01",
+        "name": "PowerAppTrigger",
+        "location": "[parameters('location')]",
+        "properties": {
+            "state": "Enabled",
+            "definition": {
+                "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+                "contentVersion": "1.0.0.0",
+                "parameters": {
+                    "$connections": {
+                        "defaultValue": {},
+                        "type": "Object"
+                    }
+                },
+                "triggers": {
+                    "manual": {
+                        "type": "Request",
+                        "kind": "Http",
+                        "inputs": {
+                            "schema": {
+                                "properties": {
+                                    "MigrationSchedule": {
+                                        "type": "string"
+                                    },
+                                    "PolicyName": {
+                                        "type": "string"
+                                    },
+                                    "upn": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "actions": {
+                    "Condition": {
+                        "actions": {
+                            "Check_for_MigrationSchedule": {
+                                "actions": {
+                                    "Send_message": {
+                                        "runAfter": {},
+                                        "type": "ApiConnection",
+                                        "inputs": {
+                                            "body": {
+                                                "ContentData": "@{base64(concat('{','\n','  \"upn\": \"',outputs('UserPrincipalName'),'\",','\n','  \"upgradepolicy\": \"',outputs('PolicyName'),'\"','\n','}'))}",
+                                                "ContentType": "Application/json"
+                                            },
+                                            "host": {
+                                                "connection": {
+                                                    "name": "@parameters('$connections')['servicebus']['connectionId']"
+                                                }
+                                            },
+                                            "method": "post",
+                                            "path": "/@{encodeURIComponent(encodeURIComponent('batch'))}/messages",
+                                            "queries": {
+                                                "systemProperties": "None"
+                                            }
+                                        }
+                                    }
+                                },
+                                "runAfter": {},
+                                "else": {
+                                    "actions": {
+                                        "Condition_2": {
+                                            "actions": {
+                                                "Send_an_email_(V2)_2": {
+                                                    "runAfter": {},
+                                                    "type": "ApiConnection",
+                                                    "inputs": {
+                                                        "body": {
+                                                            "Body": "<p>Migration to TeamsOnly mode complete</p>",
+                                                            "Subject": "Migration to TeamsOnly mode complete",
+                                                            "To": "@{outputs('UserPrincipalName')}"
+                                                        },
+                                                        "host": {
+                                                            "connection": {
+                                                                "name": "@parameters('$connections')['office365']['connectionId']"
+                                                            }
+                                                        },
+                                                        "method": "post",
+                                                        "path": "/v2/Mail"
+                                                    }
+                                                }
+                                            },
+                                            "runAfter": {
+                                                "Get_job_output": [
+                                                    "Succeeded"
+                                                ]
+                                            },
+                                            "else": {
+                                                "actions": {
+                                                    "Send_an_email_(V2)_3": {
+                                                        "runAfter": {},
+                                                        "type": "ApiConnection",
+                                                        "inputs": {
+                                                            "body": {
+                                                                "Body": "<p>TeamsOnly Migration for <br>\nJobid: @{outputs('Create_job')?['body/properties/jobId']}<br>\nError:<br>\n@{body('Get_job_output')?['body']}</p>",
+                                                                "Subject": "Migration failed: Action required",
+                                                                "To": "@{outputs('UserPrincipalName')}"
+                                                            },
+                                                            "host": {
+                                                                "connection": {
+                                                                    "name": "@parameters('$connections')['office365']['connectionId']"
+                                                                }
+                                                            },
+                                                            "method": "post",
+                                                            "path": "/v2/Mail"
+                                                        }
+                                                    }
+                                                }
+                                            },
+                                            "expression": {
+                                                "and": [{
+                                                        "equals": [
+                                                            "@trim(outputs('Get_job_output')?['body'])",
+                                                            "Success"
+                                                        ]
+                                                    }
+                                                ]
+                                            },
+                                            "type": "If"
+                                        },
+                                        "Create_job": {
+                                            "runAfter": {},
+                                            "type": "ApiConnection",
+                                            "inputs": {
+                                                "body": {
+                                                    "properties": {
+                                                        "parameters": {
+                                                            "Policy": "@{outputs('PolicyName')}",
+                                                            "upn": "@{outputs('UserPrincipalName')}"
+                                                        }
+                                                    }
+                                                },
+                                                "host": {
+                                                    "connection": {
+                                                        "name": "@parameters('$connections')['azureautomation']['connectionId']"
+                                                    }
+                                                },
+                                                "method": "put",
+                                                "path": "[concat('/subscriptions/@{encodeURIComponent(''', subscription().id,''')}/resourceGroups/@{encodeURIComponent(''',resourceGroup().name,''')}/providers/Microsoft.Automation/automationAccounts/@{encodeURIComponent(''',variables('automationAccountName'),''')}/jobs')]",
+                                                "queries": {
+                                                    "runbookName": "UpgradeToTeamsOnly",
+                                                    "wait": true,
+                                                    "x-ms-api-version": "2015-10-31"
+                                                }
+                                            }
+                                        },
+                                        "Get_job_output": {
+                                            "runAfter": {
+                                                "Create_job": [
+                                                    "Succeeded"
+                                                ]
+                                            },
+                                            "type": "ApiConnection",
+                                            "inputs": {
+                                                "host": {
+                                                    "connection": {
+                                                        "name": "@parameters('$connections')['azureautomation']['connectionId']"
+                                                    }
+                                                },
+                                                "method": "get",
+                                                "path": "[concat('/subscriptions/@{encodeURIComponent(''', subscription().id,''')}/resourceGroups/@{encodeURIComponent(''',resourceGroup().name,''')}/providers/Microsoft.Automation/automationAccounts/@{encodeURIComponent(''',variables('automationAccountName'),''')}/jobs/@{encodeURIComponent(body(''Create_job'')?[''properties'']?[''jobId''])}/output')]",
+                                                "queries": {
+                                                    "x-ms-api-version": "2015-10-31"
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                "expression": {
+                                    "and": [{
+                                            "equals": [
+                                                "@triggerBody()?['MigrationSchedule']",
+                                                "Migrate Friday"
+                                            ]
+                                        }
+                                    ]
+                                },
+                                "type": "If"
+                            }
+                        },
+                        "runAfter": {
+                            "Send_approval_email": [
+                                "Succeeded"
+                            ]
+                        },
+                        "else": {
+                            "actions": {
+                                "Send_an_email_(V2)": {
+                                    "runAfter": {},
+                                    "type": "ApiConnection",
+                                    "inputs": {
+                                        "body": {
+                                            "Body": "<p>your request was rejected</p>",
+                                            "Subject": "Teams migration request rejected by manager",
+                                            "To": "@{outputs('UserPrincipalName')}"
+                                        },
+                                        "host": {
+                                            "connection": {
+                                                "name": "@parameters('$connections')['office365']['connectionId']"
+                                            }
+                                        },
+                                        "method": "post",
+                                        "path": "/v2/Mail"
+                                    }
+                                }
+                            }
+                        },
+                        "expression": {
+                            "and": [{
+                                    "equals": [
+                                        "@body('Send_approval_email')",
+                                        "Approve"
+                                    ]
+                                }
+                            ]
+                        },
+                        "type": "If"
+                    },
+                    "Get_manager_(V2)": {
+                        "runAfter": {
+                            "PolicyName": [
+                                "Succeeded"
+                            ]
+                        },
+                        "type": "ApiConnection",
+                        "inputs": {
+                            "host": {
+                                "connection": {
+                                    "name": "@parameters('$connections')['office365users']['connectionId']"
+                                }
+                            },
+                            "method": "get",
+                            "path": "/codeless/v1.0/users/@{encodeURIComponent(outputs('UserPrincipalName'))}/manager"
+                        }
+                    },
+                    "MigrationSchedule": {
+                        "runAfter": {
+                            "UserPrincipalName": [
+                                "Succeeded"
+                            ]
+                        },
+                        "type": "Compose",
+                        "inputs": "@triggerBody()?['MigrationSchedule']"
+                    },
+                    "PolicyName": {
+                        "runAfter": {
+                            "MigrationSchedule": [
+                                "Succeeded"
+                            ]
+                        },
+                        "type": "Compose",
+                        "inputs": "@triggerBody()?['PolicyName']"
+                    },
+                    "Send_approval_email": {
+                        "runAfter": {
+                            "Get_manager_(V2)": [
+                                "Succeeded"
+                            ]
+                        },
+                        "type": "ApiConnectionWebhook",
+                        "inputs": {
+                            "body": {
+                                "Message": {
+                                    "HideHTMLMessage": false,
+                                    "Importance": "Normal",
+                                    "Options": "Approve, Reject",
+                                    "ShowHTMLConfirmationDialog": false,
+                                    "Subject": "APPROVAL REQUIRED: Teams upgrade for @{outputs('UserPrincipalName')}",
+                                    "To": "@body('Get_manager_(V2)')?['mail']"
+                                },
+                                "NotificationUrl": "@{listCallbackUrl()}"
+                            },
+                            "host": {
+                                "connection": {
+                                    "name": "@parameters('$connections')['office365']['connectionId']"
+                                }
+                            },
+                            "path": "/approvalmail/$subscriptions"
+                        }
+                    },
+                    "UserPrincipalName": {
+                        "runAfter": {
+                            "admin_notification_email": [
+                                "Succeeded"
+                            ]
+                        },
+                        "type": "Compose",
+                        "inputs": "@triggerBody()?['upn']"
+                    },
+                    "admin_notification_email": {
+                        "runAfter": {},
+                        "type": "Compose",
+                        "inputs": "update@contoso.com"
+                    }
+                },
+                "outputs": {}
+            },
+            "parameters": {
+                "$connections": {
+                    "value": {
+                        "azureautomation": {
+                            "connectionId": "[concat('/subscriptions/',subscription().id,'/resourceGroups/',resourceGroup().name,'/providers/Microsoft.Web/connections/azureautomation')]",
+                            "connectionName": "azureautomation",
+                            "id": "[concat('/subscriptions/',subscription().id,'/providers/Microsoft.Web/locations/',parameters('location'),'/managedApis/azureautomation')]"
+                        },
+                        "office365": {
+                            "connectionId": "[concat('/subscriptions/',subscription().id,'/resourceGroups/',resourceGroup().name,'/providers/Microsoft.Web/connections/office365')]",
+                            "connectionName": "office365",
+                            "id": "[concat('/subscriptions/',subscription().id,'/providers/Microsoft.Web/locations/',parameters('location'),'/managedApis/office365')]"
+                        },
+                        "office365users": {
+                            "connectionId": "[concat('/subscriptions/',subscription().id,'/resourceGroups/',resourceGroup().name,'/providers/Microsoft.Web/connections/office365users')]",
+                            "connectionName": "office365users",
+                            "id": "[concat('/subscriptions/',subscription().id,'/providers/Microsoft.Web/locations/',parameters('location'),'/managedApis/office365users')]"
+                        },
+                        "servicebus": {
+                            "connectionId": "[concat('/subscriptions/',subscription().id,'/resourceGroups/',resourceGroup().name,'/providers/Microsoft.Web/connections/servicebus')]",
+                            "connectionName": "servicebus",
+                            "id": "[concat('/subscriptions/',subscription().id,'/providers/Microsoft.Web/locations/',parameters('location'),'/managedApis/servicebus')]"
+                        }
+                    }
+                }
+            }
+        }
+      },
+      {
         "properties": {
             "state": "Enabled",
             "definition": {
