@@ -266,7 +266,7 @@
       {
         "type": "Microsoft.Web/connections",
         "name": "office365",
-        "apiVersion": "2017-07-01",
+        "apiVersion": "2015-08-01-preview",
         "location": "[parameters('location')]",
         "properties": {
           "displayName": "office365",
@@ -285,7 +285,7 @@
       {
         "type": "Microsoft.Web/connections",
         "name": "office365users",
-        "apiVersion": "2017-07-01",
+        "apiVersion": "2015-08-01-preview",
         "location": "[parameters('location')]",
         "properties": {
           "displayName": "office365users",
