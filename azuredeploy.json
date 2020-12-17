@@ -264,9 +264,53 @@
         }
       },
       {
+        "type": "Microsoft.Web/connections",
+        "name": "office365",
+        "apiVersion": "2017-07-01",
+        "location": "[parameters('location')]",
+        "properties": {
+          "displayName": "office365",
+          "customParameterValues": {},
+          "api": {
+            "id": "[concat('/subscriptions/',subscription().id,'/providers/Microsoft.Web/locations/',parameters('location'),'/managedApis/office365')]"
+          },
+          "parameterValues": {
+            "token:TenantId": "[subscription().tenantId]",
+            "token:clientId": "7ab7862c-4c57-491e-8a45-d52a7e023983",
+            "token:grantType": "client_credentials",
+            "token:clientSecret": "placeholder"
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Web/connections",
+        "name": "office365users",
+        "apiVersion": "2017-07-01",
+        "location": "[parameters('location')]",
+        "properties": {
+          "displayName": "office365users",
+          "customParameterValues": {},
+          "api": {
+            "id": "[concat('/subscriptions/',subscription().id,'/providers/Microsoft.Web/locations/',parameters('location'),'/managedApis/office365users')]"
+          },
+          "parameterValues": {
+            "token:TenantId": "[subscription().tenantId]",
+            "token:clientId": "7ab7862c-4c57-491e-8a45-d52a7e023983",
+            "token:grantType": "client_credentials",
+            "token:clientSecret": "placeholder"
+          }
+        }
+      },
+      {
         "type": "Microsoft.Logic/workflows",
         "apiVersion": "2017-07-01",
         "name": "PowerAppTrigger",
+        "dependsOn": [
+            "[resourceId('Microsoft.Web/connections', 'servicebus')]",
+            "[resourceId('Microsoft.Web/connections', 'office365')]",
+            "[resourceId('Microsoft.Web/connections', 'office365users')]",
+            "[resourceId('Microsoft.Web/connections', 'automationaccount')]"
+        ],
         "location": "[parameters('location')]",
         "properties": {
             "state": "Enabled",
@@ -546,7 +590,7 @@
                                     "name": "@parameters('$connections')['office365']['connectionId']"
                                 }
                             },
-                            "path": "[concat('/approvalmail/',subscription().id)]"
+                            "path": "/approvalmail/$subscriptions"
                         }
                     },
                     "UserPrincipalName": {
@@ -569,25 +613,25 @@
             "parameters": {
                 "$connections": {
                     "value": {
+                        "servicebus": {
+                            "id": "[concat(subscription().id, '/providers/Microsoft.Web/locations/',parameters('location'), '/managedApis/', 'servicebus')]",
+                            "connectionId": "[resourceId('Microsoft.Web/connections', 'servicebus')]",
+                            "connectionName": "servicebus"
+                        },
                         "azureautomation": {
-                            "connectionId": "[concat('/subscriptions/',subscription().id,'/resourceGroups/',resourceGroup().name,'/providers/Microsoft.Web/connections/azureautomation')]",
-                            "connectionName": "azureautomation",
-                            "id": "[concat('/subscriptions/',subscription().id,'/providers/Microsoft.Web/locations/',parameters('location'),'/managedApis/azureautomation')]"
+                            "id": "[concat(subscription().id, '/providers/Microsoft.Web/locations/', parameters('location'), '/managedApis/', 'azureautomation')]",
+                            "connectionId": "[resourceId('Microsoft.Web/connections', 'automationaccount')]",
+                            "connectionName": "automationaccount"
                         },
                         "office365": {
-                            "connectionId": "[concat('/subscriptions/',subscription().id,'/resourceGroups/',resourceGroup().name,'/providers/Microsoft.Web/connections/office365')]",
-                            "connectionName": "office365",
-                            "id": "[concat('/subscriptions/',subscription().id,'/providers/Microsoft.Web/locations/',parameters('location'),'/managedApis/office365')]"
+                            "id": "[concat(subscription().id, '/providers/Microsoft.Web/locations/', parameters('location'), '/managedApis/', 'office365')]",
+                            "connectionId": "[resourceId('Microsoft.Web/connections', 'office365')]",
+                            "connectionName": "office365"
                         },
                         "office365users": {
-                            "connectionId": "[concat('/subscriptions/',subscription().id,'/resourceGroups/',resourceGroup().name,'/providers/Microsoft.Web/connections/office365users')]",
-                            "connectionName": "office365users",
-                            "id": "[concat('/subscriptions/',subscription().id,'/providers/Microsoft.Web/locations/',parameters('location'),'/managedApis/office365users')]"
-                        },
-                        "servicebus": {
-                            "connectionId": "[concat('/subscriptions/',subscription().id,'/resourceGroups/',resourceGroup().name,'/providers/Microsoft.Web/connections/servicebus')]",
-                            "connectionName": "servicebus",
-                            "id": "[concat('/subscriptions/',subscription().id,'/providers/Microsoft.Web/locations/',parameters('location'),'/managedApis/servicebus')]"
+                            "id": "[concat(subscription().id, '/providers/Microsoft.Web/locations/', parameters('location'), '/managedApis/', 'office365users')]",
+                            "connectionId": "[resourceId('Microsoft.Web/connections', 'office365users')]",
+                            "connectionName": "office365users"
                         }
                     }
                 }
