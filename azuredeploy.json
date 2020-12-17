@@ -275,10 +275,6 @@
             "id": "[concat('/subscriptions/',subscription().subscriptionid,'/providers/Microsoft.Web/locations/',parameters('location'),'/managedApis/office365')]"
           },
           "parameterValues": {
-            "token:TenantId": "[subscription().tenantId]",
-            "token:clientId": "7ab7862c-4c57-491e-8a45-d52a7e023983",
-            "token:grantType": "client_credentials",
-            "token:clientSecret": "placeholder"
           }
         }
       },
@@ -294,10 +290,6 @@
             "id": "[concat('/subscriptions/',subscription().subscriptionid,'/providers/Microsoft.Web/locations/',parameters('location'),'/managedApis/office365users')]"
           },
           "parameterValues": {
-            "token:TenantId": "[subscription().tenantId]",
-            "token:clientId": "7ab7862c-4c57-491e-8a45-d52a7e023983",
-            "token:grantType": "client_credentials",
-            "token:clientSecret": "placeholder"
           }
         }
       },
