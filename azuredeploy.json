@@ -272,7 +272,7 @@
           "displayName": "office365",
           "customParameterValues": {},
           "api": {
-            "id": "[concat('/subscriptions/',subscription().id,'/providers/Microsoft.Web/locations/',parameters('location'),'/managedApis/office365')]"
+            "id": "[concat('/subscriptions/',subscription().subscriptionid,'/providers/Microsoft.Web/locations/',parameters('location'),'/managedApis/office365')]"
           },
           "parameterValues": {
             "token:TenantId": "[subscription().tenantId]",
@@ -291,7 +291,7 @@
           "displayName": "office365users",
           "customParameterValues": {},
           "api": {
-            "id": "[concat('/subscriptions/',subscription().id,'/providers/Microsoft.Web/locations/',parameters('location'),'/managedApis/office365users')]"
+            "id": "[concat('/subscriptions/',subscription().subscriptionid,'/providers/Microsoft.Web/locations/',parameters('location'),'/managedApis/office365users')]"
           },
           "parameterValues": {
             "token:TenantId": "[subscription().tenantId]",
